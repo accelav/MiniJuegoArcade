@@ -30,22 +30,33 @@ public class CreadorObjetos : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
         RaycastHit hit;
 
-        if (airHockey == true)
-        { 
-            objetoCreado = Instantiate(prefabAirHockey, Vector3.zero, Quaternion.identity);
-
-            airHockey = false;
+        if (airHockey)
+        {
             
-        }
-        if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit))
             {
+
+                
                 objetoCreado.transform.position = hit.point;
 
             }
+            objetoCreado.transform.position += new Vector3(0, objetoCreado.transform.localScale.y / 2, 0);
+
+
+            objetoCreado.transform.Rotate(Input.mouseScrollDelta * 16);
+
+
+            // Fijar el objeto en su posición actual al hacer clic
+            if (Input.GetMouseButtonDown(0))
+            {
+                objetoCreado = null; // Reiniciar para permitir crear otro objeto
+                airHockey = false; // Desactivar el modo airHockey
+            }
+        }
 
         if (abrirLateral == true)
         {
@@ -53,8 +64,6 @@ public class CreadorObjetos : MonoBehaviour
                 abrirLateral = false;
         }
 
-
-        
     }
 
     public void AbrirCreador()
@@ -64,6 +73,7 @@ public class CreadorObjetos : MonoBehaviour
 
     public void AirHockey()
     {
+        objetoCreado = Instantiate(prefabAirHockey, Vector3.zero, Quaternion.identity);
         airHockey = true;
     }
 }
