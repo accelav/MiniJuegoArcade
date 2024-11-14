@@ -20,11 +20,14 @@ public class CreadorObjetos : MonoBehaviour
 
     bool abrirLateral = false;
     bool airHockey = false;
+    public bool estaEnModoObjeto = false;
+    private Renderer rend;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rend = GetComponent<Renderer>();
     }
 
     // Update is called once per frame
@@ -43,9 +46,12 @@ public class CreadorObjetos : MonoBehaviour
                 
                 objetoCreado.transform.position = hit.point;
 
+               
+
             }
             objetoCreado.transform.position += new Vector3(0, objetoCreado.transform.localScale.y / 2, 0);
 
+            OnMouseDown();
 
             objetoCreado.transform.Rotate(Input.mouseScrollDelta * 16);
 
@@ -56,6 +62,13 @@ public class CreadorObjetos : MonoBehaviour
                 objetoCreado = null; // Reiniciar para permitir crear otro objeto
                 airHockey = false; // Desactivar el modo airHockey
             }
+        }
+
+        if (Physics.Raycast(ray, out hit))
+
+        {
+            Debug.Log("Raycast hit: " + hit.collider.gameObject.name);
+
         }
 
         if (abrirLateral == true)
@@ -76,4 +89,12 @@ public class CreadorObjetos : MonoBehaviour
         objetoCreado = Instantiate(prefabAirHockey, Vector3.zero, Quaternion.identity);
         airHockey = true;
     }
+
+    private void OnMouseDown()
+    {
+
+        estaEnModoObjeto = !estaEnModoObjeto;
+
+    }
+
 }
