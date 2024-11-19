@@ -27,17 +27,17 @@ public class CreadorObjetos : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rend = GetComponent<Renderer>();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        /*Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (airHockey)
+       /* if (airHockey)
         {
             
             if (Physics.Raycast(ray, out hit))
@@ -51,12 +51,14 @@ public class CreadorObjetos : MonoBehaviour
             }
             objetoCreado.transform.position += new Vector3(0, objetoCreado.transform.localScale.y / 2, 0);
 
-            OnMouseDown();
+            
 
             objetoCreado.transform.Rotate(Input.mouseScrollDelta * 16);
 
 
-            // Fijar el objeto en su posición actual al hacer clic
+
+
+            // Fijar el objeto en su posiciï¿½n actual al hacer clic
             if (Input.GetMouseButtonDown(0))
             {
                 objetoCreado = null; // Reiniciar para permitir crear otro objeto
@@ -64,13 +66,18 @@ public class CreadorObjetos : MonoBehaviour
             }
         }
 
+
+
         if (Physics.Raycast(ray, out hit))
 
         {
-            Debug.Log("Raycast hit: " + hit.collider.gameObject.name);
+            if (hit.collider.gameObject == prefabAirHockey && Input.GetMouseButtonDown(0))
+            {
+                estaEnModoObjeto = !estaEnModoObjeto;
+            }
 
         }
-
+*/
         if (abrirLateral == true)
         {
                 LeanTween.moveLocalX(pantallaLateral, 320f, durationAnim).setEase(LeanTweenType.linear);
@@ -90,11 +97,11 @@ public class CreadorObjetos : MonoBehaviour
         airHockey = true;
     }
 
-    private void OnMouseDown()
+    /*private void OnMouseDown()
     {
 
         estaEnModoObjeto = !estaEnModoObjeto;
 
-    }
+    }*/
 
 }
