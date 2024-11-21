@@ -5,14 +5,14 @@ using TMPro;
 
 public class CreadorObjetos : MonoBehaviour
 {
-    [SerializeField]
-    TextMeshProUGUI textoCrear;
-    [SerializeField]
-    TextMeshProUGUI textoCreador;
-    [SerializeField]
-    GameObject textoVolverASeleccionar;
 
 
+
+
+    [SerializeField]
+    GameObject textoCreador;
+    [SerializeField]
+    GameObject textoSeleccionar;
     public GameObject objetoCreado;
     public bool creandoObjeto = false;
 
@@ -55,8 +55,9 @@ public class CreadorObjetos : MonoBehaviour
             {
                 objetoCreado = null; // Reiniciar para permitir crear otro objeto
                 creandoObjeto = false; // Desactivar el modo crear objeto
-                textoCreador.gameObject.SetActive(false);
-                textoVolverASeleccionar.gameObject.SetActive(true);
+                textoCreador.SetActive(false);
+                textoSeleccionar.SetActive(true);
+
             }
         }
 
@@ -71,8 +72,9 @@ public class CreadorObjetos : MonoBehaviour
     {
         objetoCreado = Instantiate(prefab, Vector3.zero, Quaternion.identity);
         creandoObjeto = true;
-        textoCrear.gameObject.SetActive(false);
-        textoCreador.gameObject.SetActive(true);
+        textoCreador.SetActive(true);
+        
+
     }
 
 

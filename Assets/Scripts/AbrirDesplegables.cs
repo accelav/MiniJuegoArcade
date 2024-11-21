@@ -5,10 +5,9 @@ using UnityEngine;
 
 
 
+
 public class AbrirDesplegables : MonoBehaviour
 {
-    public CreadorObjetos CreadorObjetos;
-    public SeleccionObjetos SeleccionObjetos;
     
     [SerializeField]
     GameObject pantallaLateral;
@@ -19,11 +18,11 @@ public class AbrirDesplegables : MonoBehaviour
     [SerializeField]
     GameObject flechaAbajo;
     [SerializeField]
-    TextMeshProUGUI textoBienvenida;
+    GameObject textoBienvenida;
     [SerializeField]
-    TextMeshProUGUI textoEditar;
-    [SerializeField]
-    GameObject textoCrear;
+    GameObject textoEditar;
+ 
+    
 
 
     
@@ -33,7 +32,7 @@ public class AbrirDesplegables : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        textoBienvenida.gameObject.SetActive(true);
+        textoBienvenida.SetActive(true);
         
 
     }
@@ -43,18 +42,24 @@ public class AbrirDesplegables : MonoBehaviour
     {
         if (abriendoDesplegable)
         {
-            textoEditar.gameObject.SetActive(true);
-            LeanTween.moveLocalY(desplegableAbajo, -218f, durationAnim).setEase(LeanTweenType.linear);
-            LeanTween.moveLocalY(textoBienvenida.gameObject, 273f, durationAnim).setEase(LeanTweenType.linear);
-            LeanTween.moveLocalX(textoEditar.gameObject, 0f, durationAnim).setEase(LeanTweenType.linear);
+            
+            LeanTween.moveLocalY(desplegableAbajo, 69f, durationAnim).setEase(LeanTweenType.linear);
+            LeanTween.moveLocalY(textoBienvenida, 375f, durationAnim).setEase(LeanTweenType.linear);
+            LeanTween.moveLocalX(textoEditar, -144f, durationAnim).setEase(LeanTweenType.linear);
 
         }
 
         if (abrirLateral)
         {
-                textoEditar.gameObject.SetActive(false);
-                LeanTween.moveLocalX(pantallaLateral, 275f, durationAnim).setEase(LeanTweenType.linear);
-                textoEditar.gameObject.SetActive(false);
+                
+
+                
+                LeanTween.moveLocalX(pantallaLateral, -146f, durationAnim).setEase(LeanTweenType.linear);
+                textoEditar.SetActive(false);
+
+;
+                
+                
                 
   
         }
@@ -66,10 +71,12 @@ public class AbrirDesplegables : MonoBehaviour
     {
         abriendoDesplegable = true;
         flechaAbajo.SetActive(false);
+        textoEditar.SetActive(true);
     }
     public void AbrirCreador()
     {
         abrirLateral = true;
+        textoEditar.gameObject.SetActive(false);
     }
 
 }

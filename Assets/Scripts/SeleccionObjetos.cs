@@ -3,27 +3,39 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UIElements;
+
 
 public class SeleccionObjetos : MonoBehaviour
 {
     [SerializeField]
-    TextMeshProUGUI textoMover;
+    GameObject textoEditar;
     [SerializeField]
-    TextMeshProUGUI textoRotar;
+    GameObject textoSeleccionar;
     [SerializeField]
-    TextMeshProUGUI textoEliminar;
+    GameObject textoMover;
+    [SerializeField]
+    GameObject textoRotar;
+    [SerializeField]
+    GameObject textoEliminar;
+    [SerializeField]
+    GameObject esferaDeSeleccion;
+
     public CreadorObjetos CreadorObjetos;
-     GameObject objetoSeleccionado = null;
+    GameObject objetoSeleccionado = null;
     public bool estaEnModoObjeto = false;
     private bool bloquearSeleccion;
     public bool moviendoObjeto = false;
     public bool rotandoObjeto = false;
     public bool eliminandoObjeto = false;
+    public bool estaEscalando = false;
 
     private void Update()
     {
-               
+        
+        
+
+
         if (CreadorObjetos.creandoObjeto) // Mientras el booleano "creandoObjeto" del script "CreadorObjetos" está activo,
                                           // vuelve a empezar el Update
         {
@@ -55,7 +67,7 @@ public class SeleccionObjetos : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (estaEnModoObjeto && (moviendoObjeto || rotandoObjeto || eliminandoObjeto))
+                if ((estaEnModoObjeto && (moviendoObjeto || rotandoObjeto || eliminandoObjeto || estaEscalando))) //colocar objeto. Si le doy click y se cumple que estaba en modo objeto y se esta moviendo, rotando o eliminando.
                         {
                             estaEnModoObjeto = false;
                             objetoSeleccionado.SetActive(true);
@@ -63,6 +75,13 @@ public class SeleccionObjetos : MonoBehaviour
                             moviendoObjeto = false;
                             rotandoObjeto = false;
                             eliminandoObjeto = false;
+                            textoSeleccionar.SetActive(true);
+                            textoEditar.SetActive(false);
+                            textoMover.SetActive(false);
+                            textoRotar.SetActive(false);
+                            textoEliminar.SetActive(false);
+                            esferaDeSeleccion.SetActive(false);
+                            
  
                         }
 
@@ -72,43 +91,68 @@ public class SeleccionObjetos : MonoBehaviour
                             {
                                 estaEnModoObjeto = true;
                                 objetoSeleccionado = hit.collider.gameObject;
+                                textoEditar.SetActive(true);
+                                esferaDeSeleccion.SetActive(true);
+                                esferaDeSeleccion.transform.position = hit.point;
+                                SetParent(objetoSeleccionado);
+                                if (estaEnModoObjeto)
+                                {
+                                    
+                                    esferaDeSeleccion.transform.position = objetoSeleccionado.transform.position + new Vector3(0f, 0f);
+                                }
+                                EscalarEsferaSeleccion();
+
                             }
                             
                             
                         }
-
+                
             }
 
             
             if (estaEnModoObjeto)
                 {
+                    
+
+                    textoSeleccionar.SetActive(false);
                     objetoSeleccionado.SetActive(true);
                     if (moviendoObjeto)
                     {
                         Debug.Log("Esta moviendo" + objetoSeleccionado);
                         objetoSeleccionado.transform.position = hit.point;
-                        rotandoObjeto = false;
                         
+                        rotandoObjeto = false;
+      
+
                     }
 
                     else if (rotandoObjeto)
                     {
                         objetoSeleccionado.transform.Rotate(Input.mouseScrollDelta * 16);
                         moviendoObjeto = false;
+ 
+
+                    }
+
+                    else if (estaEscalando)
+                    {
+                        if (Input.mousePosition.y != 0)
+                        {
+                        float mouse = Input.mousePosition.y;
+                        objetoSeleccionado.transform.localScale = new Vector3(mouse, mouse, mouse) * 0.25f;
+                        }
                         
                     }
 
-                    
-                    
                     else if (eliminandoObjeto)
                     {
                         Destroy(objetoSeleccionado);
                         estaEnModoObjeto = false;
                         eliminandoObjeto = false;
+                        textoEliminar.SetActive(false);
+
                     }
 
-                    
-  
                 }
         
         }
@@ -120,6 +164,7 @@ public class SeleccionObjetos : MonoBehaviour
         if (estaEnModoObjeto)
         {
             moviendoObjeto = true;
+            textoMover.SetActive(true);
         }
         
     }
@@ -129,6 +174,7 @@ public class SeleccionObjetos : MonoBehaviour
         if (estaEnModoObjeto)
         {
             rotandoObjeto = true;
+            textoRotar.SetActive(true);
         }
         
     }
@@ -138,7 +184,29 @@ public class SeleccionObjetos : MonoBehaviour
         if (estaEnModoObjeto)
         {
             eliminandoObjeto = true;
+            textoEliminar.SetActive(true);
         }
+        
+    }
+
+    public void EscalarObjeto()
+    {
+        estaEscalando = true;
+    }
+
+    public void EscalarEsferaSeleccion()
+    {
+
+        esferaDeSeleccion.gameObject.transform.LeanScaleX(2f, 1f).setLoopPingPong();
+        esferaDeSeleccion.gameObject.transform.LeanScaleZ(2f, 1f).setLoopPingPong();
+
+    }
+
+    public void SetParent(GameObject newparent)
+    {
+        
+            esferaDeSeleccion.transform.parent = newparent.transform;
+           
         
     }
 
