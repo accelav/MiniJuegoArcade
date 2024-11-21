@@ -1,113 +1,145 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using TMPro;
 
 public class SeleccionObjetos : MonoBehaviour
 {
-
-    private GameObject objetoSeleccionado = null;
+    [SerializeField]
+    TextMeshProUGUI textoMover;
+    [SerializeField]
+    TextMeshProUGUI textoRotar;
+    [SerializeField]
+    TextMeshProUGUI textoEliminar;
+    public CreadorObjetos CreadorObjetos;
+     GameObject objetoSeleccionado = null;
     public bool estaEnModoObjeto = false;
+    private bool bloquearSeleccion;
+    public bool moviendoObjeto = false;
+    public bool rotandoObjeto = false;
+    public bool eliminandoObjeto = false;
 
-    private void Start()
+    private void Update()
     {
-        
-    }
+               
+        if (CreadorObjetos.creandoObjeto) // Mientras el booleano "creandoObjeto" del script "CreadorObjetos" está activo,
+                                          // vuelve a empezar el Update
+        {
+            bloquearSeleccion = true; // Como el script "CreadorObjetos" desactiva el instanciador de objetos
+                                    // con el click izquierdo del mouse, y en este script se activa la seleccion 
+                                    // de objetos con el mimso click,
+                                    // necesitamos que se bloquee el primer click del ratón en este script
+                                    // una vez desactivado el instanciador del otro script
+                                    // simplemente volviendo a empezar este Update.
+            return;
+        }
 
-    void Update()
-    {
-        
-
-
+        // Si el bloqueo está activo, lo desactivamos después de un fotograma.
+        if (bloquearSeleccion)
+        {
+            bloquearSeleccion = false;
+            return; // Ignora este fotograma.
+        }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
+
+        if (objetoSeleccionado != null && estaEnModoObjeto)
+        {
+            objetoSeleccionado.SetActive(false);
+        }
         
         if (Physics.Raycast(ray, out hit))
-
         {
-
-           
-            
 
             if (Input.GetMouseButtonDown(0))
             {
-                objetoSeleccionado = hit.collider.gameObject;
-                SeleccionarObjeto();
+                if (estaEnModoObjeto && (moviendoObjeto || rotandoObjeto || eliminandoObjeto))
+                        {
+                            estaEnModoObjeto = false;
+                            objetoSeleccionado.SetActive(true);
+                            objetoSeleccionado = null;
+                            moviendoObjeto = false;
+                            rotandoObjeto = false;
+                            eliminandoObjeto = false;
+ 
+                        }
 
+                        else 
+                        {
+                            if (hit.collider.gameObject.tag != "Objetos")
+                            {
+                                estaEnModoObjeto = true;
+                                objetoSeleccionado = hit.collider.gameObject;
+                            }
+                            
+                            
+                        }
 
             }
+
             
-            
-        }
-        if (Physics.Raycast(ray, out hit))
-        {
-            {
-                if (estaEnModoObjeto)
+            if (estaEnModoObjeto)
                 {
+                    objetoSeleccionado.SetActive(true);
+                    if (moviendoObjeto)
+                    {
+                        Debug.Log("Esta moviendo" + objetoSeleccionado);
+                        objetoSeleccionado.transform.position = hit.point;
+                        rotandoObjeto = false;
+                        
+                    }
 
-                    objetoSeleccionado.transform.position = hit.point;
+                    else if (rotandoObjeto)
+                    {
+                        objetoSeleccionado.transform.Rotate(Input.mouseScrollDelta * 16);
+                        moviendoObjeto = false;
+                        
+                    }
 
+                    
+                    
+                    else if (eliminandoObjeto)
+                    {
+                        Destroy(objetoSeleccionado);
+                        estaEnModoObjeto = false;
+                        eliminandoObjeto = false;
+                    }
+
+                    
+  
                 }
-            }
         
-
         }
-            
-        
-
 
     }
 
-    void SeleccionarObjeto()
+    public void MoverObjeto()
     {
-        Debug.Log("Esta moviendo" + objetoSeleccionado);
-        estaEnModoObjeto = !estaEnModoObjeto;
+        if (estaEnModoObjeto)
+        {
+            moviendoObjeto = true;
+        }
+        
+    }
+
+    public void RotarObjeto()
+    {
+        if (estaEnModoObjeto)
+        {
+            rotandoObjeto = true;
+        }
+        
+    }
+
+    public void EliminarObjeto()
+    {
+        if (estaEnModoObjeto)
+        {
+            eliminandoObjeto = true;
+        }
+        
     }
 
 }
-
-
-
- 
-
-/*
-private GameObject objetoSeleccionado = null;  // Objeto que se seleccionó para mover
-private bool estaEnModoObjeto = false;          // Determina si el objeto está en modo de movimiento
-
- void Update()
-{
-    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    RaycastHit hit;
-
-    // Verifica si el rayo ha golpeado algún objeto
-    if (Physics.Raycast(ray, out hit))
-    {
-        // Si se hace clic con el botón izquierdo del mouse
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Si no hay objeto seleccionado, seleccionamos el objeto que fue golpeado por el raycast
-            if (estaEnModoObjeto == false)
-            {
-                // Solo seleccionar el objeto si no está en modo de movimiento
-                objetoSeleccionado = hit.collider.gameObject;
-                estaEnModoObjeto = true;
-            }
-            // Si el objeto ya está seleccionado, desactivamos el modo de movimiento
-            else
-            {
-                // Si el objeto que se hace clic es el que está seleccionado, desactivar
-                if (hit.collider.gameObject == objetoSeleccionado)
-                {
-                    estaEnModoObjeto = false;
-                    objetoSeleccionado = null;
-                }
-            }
-        }
-    }
-
-    // Si un objeto está seleccionado, moverlo a la posición del raycast
-    if (estaEnModoObjeto && objetoSeleccionado != null)
-    {
-        // Mueve el objeto seleccionado a la posición del raycast
-        objetoSeleccionado.transform.position = hit.point;
-    }
-}*/

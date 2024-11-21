@@ -63,6 +63,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: air-hockey
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 39d48fc919d794b4fb3092af9cdecf32,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 39d48fc919d794b4fb3092af9cdecf32,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -70,7 +80,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 39d48fc919d794b4fb3092af9cdecf32,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5144134683594148130}
+      addedObject: {fileID: -8657351208333965410}
   m_SourcePrefab: {fileID: 100100000, guid: 39d48fc919d794b4fb3092af9cdecf32, type: 3}
 --- !u!1 &1040606069106824343 stripped
 GameObject:
@@ -78,7 +88,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 194095023362894278}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &5144134683594148130
+--- !u!64 &-8657351208333965410
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,7 +98,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -98,5 +108,5 @@ MeshCollider:
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
-  m_CookingOptions: -1
-  m_Mesh: {fileID: -3997155702644553890, guid: 39d48fc919d794b4fb3092af9cdecf32, type: 3}
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3997155702644553890, guid: 743781770fd5c5b4aaa2c7ef8af38616, type: 3}

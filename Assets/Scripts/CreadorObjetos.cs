@@ -1,43 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CreadorObjetos : MonoBehaviour
 {
-
     [SerializeField]
-    GameObject pantallaLateral;
+    TextMeshProUGUI textoCrear;
     [SerializeField]
-    float durationAnim = 0.25f;
+    TextMeshProUGUI textoCreador;
     [SerializeField]
-    GameObject botonAirHockey;
-    [SerializeField]
-    GameObject prefabAirHockey;
-
-    GameObject objetoCreado;
-    //GameObject objetoCreado2;
+    GameObject textoVolverASeleccionar;
 
 
-    bool abrirLateral = false;
-    bool airHockey = false;
-    public bool estaEnModoObjeto = false;
-    private Renderer rend;
+    public GameObject objetoCreado;
+    public bool creandoObjeto = false;
+
     
-
-    // Start is called before the first frame update
     void Start()
     {
-        
-    }
 
-    // Update is called once per frame
+    }
     void Update()
     {
-        
-        /*Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-
-       /* if (airHockey)
+        if (objetoCreado != null)
+        {
+            objetoCreado.SetActive(false);
+        }
+        if (creandoObjeto)
         {
             
             if (Physics.Raycast(ray, out hit))
@@ -45,11 +37,11 @@ public class CreadorObjetos : MonoBehaviour
 
                 
                 objetoCreado.transform.position = hit.point;
-
+                objetoCreado.SetActive(true);
                
 
             }
-            objetoCreado.transform.position += new Vector3(0, objetoCreado.transform.localScale.y / 2, 0);
+            //objetoCreado.transform.position += new Vector3(0, objetoCreado.transform.localScale.y / 2, 0);
 
             
 
@@ -62,46 +54,27 @@ public class CreadorObjetos : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 objetoCreado = null; // Reiniciar para permitir crear otro objeto
-                airHockey = false; // Desactivar el modo airHockey
+                creandoObjeto = false; // Desactivar el modo crear objeto
+                textoCreador.gameObject.SetActive(false);
+                textoVolverASeleccionar.gameObject.SetActive(true);
             }
         }
 
 
 
-        if (Physics.Raycast(ray, out hit))
-
-        {
-            if (hit.collider.gameObject == prefabAirHockey && Input.GetMouseButtonDown(0))
-            {
-                estaEnModoObjeto = !estaEnModoObjeto;
-            }
-
-        }
-*/
-        if (abrirLateral == true)
-        {
-                LeanTween.moveLocalX(pantallaLateral, 320f, durationAnim).setEase(LeanTweenType.linear);
-                abrirLateral = false;
-        }
 
     }
 
-    public void AbrirCreador()
+
+
+    public void CrearObjeto(GameObject prefab)
     {
-        abrirLateral = true;
+        objetoCreado = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        creandoObjeto = true;
+        textoCrear.gameObject.SetActive(false);
+        textoCreador.gameObject.SetActive(true);
     }
 
-    public void AirHockey()
-    {
-        objetoCreado = Instantiate(prefabAirHockey, Vector3.zero, Quaternion.identity);
-        airHockey = true;
-    }
 
-    /*private void OnMouseDown()
-    {
-
-        estaEnModoObjeto = !estaEnModoObjeto;
-
-    }*/
 
 }
